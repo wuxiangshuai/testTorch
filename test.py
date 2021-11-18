@@ -38,8 +38,14 @@ import torch
 # print(w)
 
 # Calculate Gradient
-x = torch.tensor([[1., 0.], [-1., 1.]], requires_grad=True)
-z = x.pow(2).sum()
-z.backward()
-x = x.grad
-print(x)
+# x = torch.tensor([[1., 0.], [-1., 1.]], requires_grad=True)
+# z = x.pow(2).sum()
+# z.backward()
+# x = x.grad
+# print(x)
+
+train_loss = [1, 2, 3]  # 存储训练集的Loss
+dev_loss = [1, 2, 3]  # 存储测试集的Loss
+print(train_loss[0])
+for epoch in range(1, 10 + 1):
+    print(epoch)
