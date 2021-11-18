@@ -16,7 +16,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu") # 是否�
 EPOCHS = 10 # 训练数据集的轮次
 
 # 3、构建 pipeline，对图像处理
-pipeline=transforms.Compose([
+pipeline = transforms.Compose([
         transforms.ToTensor(), # 将图像转换成 tensor
         transforms.Normalize((0.1307,), (0.3081,)) # 正则化：降低模型复杂度以防止过拟合现象
         ])
@@ -39,7 +39,7 @@ test_data = datasets.MNIST(
 )
 
 # 加载数据
-train_loader = DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=True)
+train_loader = DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=True) #shuffle=True：打乱排序
 test_loader = DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=True)
 
 
@@ -50,8 +50,8 @@ class CNN(nn.Module):
         # in_channels, out_channels, kernel_size, stride
         self.conv1 = nn.Conv2d(1, 10, 5, 1) # 1、灰度图片的通道， 10：输出通道， 5：kernel
         self.conv2 = nn.Conv2d(10, 20, 3, 1) # 10：输入通道， 20：输出通道你， 3：Kernel
-        self.dropout1 = nn.Dropout(0.25)
-        self.dropout2 = nn.Dropout(0.5)
+        # self.dropout1 = nn.Dropout(0.25)
+        # self.dropout2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(20*10*10, 500) # 20*10*10：输入通道, 500：输出通道
         self.fc2 = nn.Linear(500, 10) # 500:输入通道， 10：输出通道
 
@@ -82,6 +82,7 @@ def train_model(model, device, train_loader, optimizer, epoch):
     # 训练模型
     model.train()
     train_loss = []  # 存储训练集的Loss
+    train_acc = []  # 存储训练集的acc
     for batch_index, (data, target) in enumerate(train_loader):
         # 部署到Device上去
         data, target = data.to(device), target.to(device)
@@ -126,7 +127,8 @@ def test_model(model, device, test_loader):
             correct += pred.eq(target.view_as(pred)).sum().item()
         test_loss /= len(test_loader.dataset)
         dev_loss.append(test_loss)
-        print("Test --- Average loss : {:.4f}, Accuracy : {:.3f}\n".format(test_loss, 100.0*correct/len(test_loader.dataset)))
+        print("Test --- Average loss : {:.4f}, Accuracy : {:.3f}\n"
+              .format(test_loss, 100.0*correct/len(test_loader.dataset)))
     return dev_loss
 
 
@@ -165,6 +167,26 @@ def plot_learning_curve(train_loss, dev_loss, title=''):
 #     plt.title('Learning curve of {}'.format(title))
 #     plt.legend()
 #     plt.show()
+def plot_accuracy_curve(train_acc, dev_acc, title=''):
+    total_steps = len(train_acc)
+    x_1 = range(total_steps)
+    x_2 = x_1[::len(train_acc) // len(dev_acc)]
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot(x_1, train_acc, c='tab:red', label='train')
+    ax2 = ax.twinx()
+    ax2.plot(x_2, dev_acc, c='tab:cyan', label='dev')
+    ax.grid()
+    ax.legend()
+    ax.set_xlabel("Training steps")
+    ax.set_ylabel("MSE ACC")
+    ax2.set_ylabel("Dev steps")
+    ax2.set_ylim(0, 0.01)
+    ax.set_ylim(0, 3)
+    plt.title('Learning curve of {}'.format(title))
+    plt.legend()
+    plt.show()
+
 
 
 # 9、调用方法 7 、 8

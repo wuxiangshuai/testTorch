@@ -26,22 +26,22 @@ def load_mnist(path, kind='train'):
 
 X_train, y_train = load_mnist('dataset/MNIST/raw')
 
-fig, ax = plt.subplots(
-    nrows=2,
-    ncols=5,
-    sharex=True,
-    sharey=True, )
-
-ax = ax.flatten()
-for i in range(10):
-    img = X_train[y_train == i][0].reshape(28, 28)
-    ax[i].imshow(img, cmap='Greys', interpolation='nearest')
-
-ax[0].set_xticks([])
-ax[0].set_yticks([])
-plt.tight_layout()
-plt.savefig('test.jpg')
-plt.show()
+# fig, ax = plt.subplots(
+#     nrows=2,
+#     ncols=5,
+#     sharex=True,
+#     sharey=True, )
+#
+# ax = ax.flatten()
+# for i in range(10):
+#     img = X_train[y_train == i][0].reshape(28, 28)
+#     # ax[i].imshow(img, cmap='Greys', interpolation='nearest')
+#     ax[i].imshow(img, cmap=plt.get_cmap('gray'), interpolation='nearest')
+#
+# ax[0].set_xticks([])
+# ax[0].set_yticks([])
+# plt.tight_layout()
+# plt.show()
 
 fig, ax = plt.subplots(
     nrows=5,
@@ -51,10 +51,12 @@ fig, ax = plt.subplots(
 
 ax = ax.flatten()
 for i in range(25):
-    img = X_train[y_train == 7][i].reshape(28, 28)
-    ax[i].imshow(img, cmap='Greys', interpolation='nearest')
+    img = X_train[y_train == 9][i].reshape(28, 28)
+    # ax[i].imshow(img, cmap='Greys', interpolation='nearest')
+    ax[i].imshow(img, cmap=plt.get_cmap('gray'), interpolation='nearest')
 
 ax[0].set_xticks([])
 ax[0].set_yticks([])
 plt.tight_layout()
 plt.show()
+# plt.savefig('0.png')
